@@ -47,8 +47,8 @@
 
     <!-- Date Range Filter -->
     <div class="card mb-3">
-        <div class="card-body py-2">
-            <div class="row align-items-end">
+        <div class="card-body">
+            <div class="row align-items-end pb-3">
                 <div class="col-md-4">
                     <label for="filter_start_date" class="form-label mb-1 small text-muted">Dari Tanggal</label>
                     <input type="date" class="form-control form-control-sm" id="filter_start_date">
