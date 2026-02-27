@@ -84,7 +84,7 @@ class TransactionService extends BaseService
     public function handleDeleteTransaction(int $id): self
     {
         try {
-            $transaction = $this->transactionRepository->getTransactionById($id);
+            $transaction = $this->transactionRepository->findTransactionById($id);
 
             $this->transactionRepository->deleteTransaction($transaction);
 

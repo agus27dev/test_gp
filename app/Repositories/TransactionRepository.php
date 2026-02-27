@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 class TransactionRepository
 {
     /**
-     * Get transactions for datatable with optional type filter.
+     * Eloquent get transactions for datatable with filter.
      *
      * @param array $filter
      * @return Builder
@@ -22,7 +22,7 @@ class TransactionRepository
     }
 
     /**
-     * Store a new transaction.
+     * Eloquent store new transaction.
      *
      * @param array $data
      * @return Transaction
@@ -33,19 +33,19 @@ class TransactionRepository
     }
 
     /**
-     * Get transaction by ID.
+     * Eloquent find transaction by ID.
      *
      * @param int $id
      * @return Transaction|null
      */
-    public function getTransactionById(int $id): ?Transaction
+    public function findTransactionById(int $id): ?Transaction
     {
         return Transaction::with('category')
             ->findOrFail($id);
     }
 
     /**
-     * Delete transaction.
+     * Eloquent delete transaction.
      *
      * @param Transaction $transaction
      * @return bool|null
