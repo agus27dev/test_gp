@@ -1,9 +1,3 @@
-# Setup Guide — Financial Management App
-
-Panduan step-by-step untuk menjalankan aplikasi ini di environment lokal.
-
----
-
 ## Prerequisites
 
 Pastikan sudah terinstal:
@@ -14,31 +8,30 @@ Pastikan sudah terinstal:
 - **Node.js** >= 18.x & **NPM** (opsional, jika ingin compile assets)
 - **Laravel Herd** (recommended) atau `php artisan serve`
 
----
 
 ## Langkah Instalasi
 
-### 1. Clone Repository
+# 1. Clone Repository
 
 ```bash
 git clone <repository-url> financial-management
 cd financial-management
 ```
 
-### 2. Install Dependencies (Composer)
+# 2. Install Dependencies (Composer)
 
 ```bash
 composer install
 ```
 
-### 3. Setup Environment File
+# 3. Setup Environment File
 
 ```bash
 cp .env.example .env
 php artisan key:generate
 ```
 
-### 4. Konfigurasi Database
+# 4. Konfigurasi Database
 
 Buka file `.env` dan sesuaikan konfigurasi database:
 
@@ -51,12 +44,12 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-> **Catatan:**
-> - Jika menggunakan **Herd** dengan MySQL bawaan, port default biasanya `3307`
-> - Jika menggunakan **XAMPP/Laragon**, port default biasanya `3306`
-> - Sesuaikan `DB_USERNAME` dan `DB_PASSWORD` dengan kredensial MySQL Anda
+**Catatan:**
+- Jika menggunakan **Herd** dengan MySQL bawaan, port default biasanya `3307`
+- Jika menggunakan **XAMPP/Laragon**, port default biasanya `3306`
+- Sesuaikan `DB_USERNAME` dan `DB_PASSWORD` dengan kredensial MySQL Anda
 
-### 5. Buat Database
+# 5. Buat Database
 
 Buat database `financial_management` melalui MySQL client:
 
@@ -68,13 +61,13 @@ mysql -u root -p -e "CREATE DATABASE financial_management;"
 **Via TablePlus/phpMyAdmin:**
 Buat database baru dengan nama `financial_management`, charset `utf8mb4`.
 
-### 6. Jalankan Migration
+# 6. Jalankan Migration
 
 ```bash
 php artisan migrate
 ```
 
-### 7. Jalankan Seeder
+# 7. Jalankan Seeder
 
 ```bash
 php artisan db:seed
@@ -85,31 +78,25 @@ Atau migration + seeder sekaligus:
 php artisan migrate:fresh --seed
 ```
 
-> Seeder akan mengisi tabel `categories` dengan data kategori default (Gaji, Makanan, Transportasi, dll).
+**Catatan:**
+- Seeder akan mengisi tabel `categories` dengan data kategori default (Gaji, Makanan, Transportasi, dll).
 
-### 8. Dump Autoload (jika diperlukan)
+# 8. Dump Autoload (jika diperlukan)
 
 ```bash
 composer dump-autoload
 ```
 
----
-
 ## Menjalankan Aplikasi
 
-### Opsi A: Menggunakan Laravel Herd (Recommended)
+# Opsi A: Menggunakan Laravel Herd (Recommended)
 
 1. Pastikan **Herd** sudah running
 2. Buka folder project di Herd Sites (default: `~/Herd/`)
 3. Akses di browser: **http://financial-management.test**
 
-> Jika project berada di luar folder Herd, tambahkan link:
-> ```bash
-> cd ~/Herd
-> ln -s /path/to/financial-management financial-management
-> ```
 
-### Opsi B: Menggunakan Artisan Serve
+# Opsi B: Menggunakan Artisan Serve
 
 ```bash
 php artisan serve
@@ -123,20 +110,20 @@ Akses di browser: **http://localhost:8000**
 
 ```
 app/
-├── Helpers/              # Global helper functions (CurrencyHelper.php)
+├── Helpers/              # Global helper functions
 ├── Http/
-│   ├── Controllers/      # Controller (slim, 1-liner)
+│   ├── Controllers/      # Controller
 │   └── Requests/         # Form Request validation
 ├── Models/               # Eloquent models + traits
 ├── Repositories/         # Database access layer
-├── Services/             # Business logic (extends BaseService)
+├── Services/             # Business logic
 └── Traits/               # ResultService, ExceptionCustom, Response
 
 public/
 ├── js/
 │   ├── common.js         # Global JS utilities
 │   └── transactions/
-│       └── index.js      # Transaction page JS (DataTable, CRUD)
+│       └── index.js      # Transaction page JS
 
 resources/views/
 ├── layouts/app.blade.php # Main layout
@@ -145,8 +132,6 @@ resources/views/
 
 routes/web.php            # Route definitions
 ```
-
----
 
 ## Tech Stack
 
@@ -160,32 +145,27 @@ routes/web.php            # Route definitions
 | DataTables | Yajra (server-side) |
 | SweetAlert2 | CDN |
 
----
 
 ## Troubleshooting
 
-### Migration gagal: "SQLSTATE[HY000] [2002] Connection refused"
+# Migration gagal: "SQLSTATE[HY000] [2002] Connection refused"
 - Pastikan MySQL sudah running
 - Cek port di `.env` sesuai dengan MySQL Anda (`3306` atau `3307`)
 
-### "Class not found" error
+# "Class not found" error
 ```bash
 composer dump-autoload
 ```
 
-### Halaman blank / 500 error
+# Halaman blank / 500 error
 ```bash
 php artisan config:clear
 php artisan cache:clear
 php artisan view:clear
 ```
 
-### DataTable tidak muncul / error
+# DataTable tidak muncul / error
 - Pastikan sudah menjalankan `composer install` (Yajra DataTables terinstal via Composer)
 - Cek Console browser untuk error JavaScript
-
----
-
-## Kontak
 
 Jika ada kendala teknis saat setup, hubungi tim yang memberikan test ini.
