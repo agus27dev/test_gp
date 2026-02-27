@@ -6,35 +6,21 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreTransactionRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
+    public function authorize()
     {
         return true;
     }
 
-    /**
-     * Prepare the data for validation.
-     */
-    protected function prepareForValidation(): void
+    protected function prepareForValidation()
     {
         if ($this->amount) {
-            // Remove dots (thousand separator) from amount before validation
-            $cleanedAmount = preg_replace('/\./', '', $this->amount, 1);
-
             $this->merge([
-                'amount' => (int) $cleanedAmount,
+                'amount' => parseRupiah($this->amount),
             ]);
         }
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
-    public function rules(): array
+    public function rules()
     {
         return [
             'category_id' => 'required|exists:categories,id',
@@ -45,12 +31,7 @@ class StoreTransactionRequest extends FormRequest
         ];
     }
 
-    /**
-     * Get custom messages for validator errors.
-     *
-     * @return array<string, string>
-     */
-    public function messages(): array
+    public function messages()
     {
         return [
             'category_id.required' => 'Kategori wajib dipilih.',

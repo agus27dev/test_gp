@@ -19,12 +19,11 @@ class Transaction extends Model
         'category_id',
         'type',
         'amount',
-        'description',
         'transaction_date',
     ];
 
-    protected $casts = [
-        'amount' => 'integer',
-        'transaction_date' => 'date',
-    ];
+    // protected $casts = [
+    //     'amount' => 'integer',
+    //     'transaction_date' => 'date',
+    // ];
 }

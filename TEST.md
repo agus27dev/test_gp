@@ -17,7 +17,7 @@ Aplikasi ini adalah sistem manajemen keuangan sederhana yang mencatat transaksi 
 
 # 1. Bug dan Eror Fixing
 
-Aplikasi ini memiliki masing-masing satu **bug dan eror tersembunyi** yang menyebabkan fitur tidak berjalan dengan benar. Temukan dan perbaiki bug dan eror tersebut.
+Aplikasi ini memiliki **bug dan eror tersembunyi** yang menyebabkan fitur tidak berjalan dengan benar. Temukan dan perbaiki bug dan eror tersebut.
 
 **Yang diharapkan:**
 - Identifikasi root cause dari eror dan bug
@@ -41,6 +41,14 @@ Implementasikan logika perhitungan agar:
 - **Total Pengeluaran** menampilkan jumlah semua transaksi bertipe `expense`
 - **Saldo** menampilkan selisih antara pemasukan dan pengeluaran
 
+# 4. Implementasi Filter Date Range pada DataTable
+
+Tampilan input filter **date range** (Dari Tanggal — Sampai Tanggal) sudah tersedia di halaman, namun belum berfungsi. Implementasikan logika filter agar:
+
+- Klik tombol **Filter** mengirim parameter tanggal ke server dan DataTable menampilkan data sesuai rentang tanggal yang dipilih
+- Klik tombol **Reset** menghapus filter dan menampilkan semua data kembali
+- Filter berlaku untuk **kedua tab** (Pemasukan dan Pengeluaran)
+
 
 # Panduan Pengerjaan
 
@@ -51,7 +59,8 @@ Implementasikan logika perhitungan agar:
 5. Gunakan helper/utility yang sudah tersedia, jangan membuat ulang
 
 
-# Catatan penilaian:**
+# Catatan penilaian:
 - Bukan hanya *fix* yang dinilai, tapi juga kemampuan menjelaskan **root cause**
 - Mengikuti pattern yang ada di project lebih diutamakan daripada "asal jalan"
 - Kerapian kode dan konsistensi dengan convention project menjadi nilai tambah
+- Memanfaatkan modal yang sudah ada (partial blade) untuk fitur update menjadi nilai tambah

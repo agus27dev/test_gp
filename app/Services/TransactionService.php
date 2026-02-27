@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\TransactionRepository;
+use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
 class TransactionService extends BaseService
@@ -15,35 +16,17 @@ class TransactionService extends BaseService
     }
 
     /**
-     * Handle get all transactions.
+     * Handle get transaction datatable.
      *
-     * @param string|null $type
+     * @param Request $request
      * @return $this
      */
-    public function handleGetAllTransactions(?string $type = null): self
+    public function handleGetTransactionDatatable(Request $request): self
     {
         try {
-            $transactions = $this->transactionRepository->getAllTransactions($type);
-
-            return $this->setSuccess(true)
-                        ->setResult($transactions)
-                        ->setMessage('List data transaksi')
-                        ->setCode(200);
-        } catch (\Exception $e) {
-            return $this->exceptionResponse($e);
-        }
-    }
-
-    /**
-     * Handle get transactions for DataTable.
-     *
-     * @param string $type
-     * @return $this
-     */
-    public function handleGetTransactionDatatable(string $type): self
-    {
-        try {
-            $query = $this->transactionRepository->getTransactionQuery($type);
+            $query = $this->transactionRepository->builderTransactionForDatatable([
+                'type' => $request->type
+            ]);
 
             $dataTable = DataTables::eloquent($query)
                 ->addIndexColumn()
@@ -65,20 +48,25 @@ class TransactionService extends BaseService
             return $this->exceptionResponse($e);
         }
     }
-
+    
     /**
-     * Handle store a new transaction.
+     * Handle store transaction.
      *
-     * @param array $data
+     * @param Request $request
      * @return $this
      */
-    public function handleStoreTransaction(array $data): self
+    public function handleStoreTransaction(Request $request): self
     {
         try {
-            $transaction = $this->transactionRepository->storeTransaction($data);
+            $this->transactionRepository->storeTransaction([
+                'category_id' => $request->category_id,
+                'type' => $request->type,
+                'amount' => $request->amount,
+                'description' => $request->description,
+                'transaction_date' => $request->transaction_date,
+            ]);
 
             return $this->setSuccess(true)
-                        ->setResult($transaction->load('category'))
                         ->setMessage('Transaksi berhasil disimpan!')
                         ->setCode(201);
         } catch (\Exception $e) {
@@ -86,8 +74,9 @@ class TransactionService extends BaseService
         }
     }
 
+
     /**
-     * Handle delete a transaction.
+     * Handle delete transaction.
      *
      * @param int $id
      * @return $this
@@ -95,13 +84,9 @@ class TransactionService extends BaseService
     public function handleDeleteTransaction(int $id): self
     {
         try {
-            $deleted = $this->transactionRepository->deleteTransaction($id);
+            $transaction = $this->transactionRepository->getTransactionById($id);
 
-            if (!$deleted) {
-                return $this->setSuccess(false)
-                            ->setMessage('Transaksi tidak ditemukan.')
-                            ->setCode(404);
-            }
+            $this->transactionRepository->deleteTransaction($transaction);
 
             return $this->setSuccess(true)
                         ->setMessage('Transaksi berhasil dihapus!')

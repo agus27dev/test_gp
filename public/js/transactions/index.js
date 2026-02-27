@@ -1,26 +1,22 @@
 $(document).ready(function () {
-    /**
-     * Initialize DataTable for a given type.
-     *
-     * @param {string} tableId
-     * @param {string} type
-     * @param {string} colorClass
-     * @returns {DataTable}
-     */
     function initDataTable(tableId, type, colorClass) {
         return $('#' + tableId).DataTable({
             processing: true,
             serverSide: true,
+            searching: false,
+            order: [],
             ajax: {
                 url: window.transactionDatatableUrl,
                 data: { type: type },
             },
             columns: [
-                { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-                { data: 'formatted_date', name: 'transaction_date' },
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, bSortable: false },
+                { data: 'formatted_date', name: 'transaction_date', orderable: false, searchable: false },
                 {
                     data: 'category_name',
                     name: 'category.name',
+                    orderable: false,
+                    searchable: false,
                     render: function (data) {
                         return '<span class="badge bg-' + colorClass + '-subtle text-' + colorClass + '">' + data + '</span>';
                     },
@@ -28,6 +24,8 @@ $(document).ready(function () {
                 {
                     data: 'description',
                     name: 'description',
+                    orderable: false,
+                    searchable: false,
                     render: function (data) {
                         return data ?? '-';
                     },
@@ -35,6 +33,8 @@ $(document).ready(function () {
                 {
                     data: 'formatted_amount',
                     name: 'amount',
+                    orderable: false,
+                    searchable: false,
                     className: 'text-end fw-semibold text-' + colorClass,
                 },
                 {
@@ -47,9 +47,8 @@ $(document).ready(function () {
             ],
             language: {
                 processing: 'Memuat...',
-                search: 'Cari:',
-                lengthMenu: 'Tampilkan _MENU_ data',
-                info: 'Menampilkan _START_ - _END_ dari _TOTAL_ data',
+                lengthMenu: '_MENU_ data',
+                info: '_START_ - _END_ dari _TOTAL_ data',
                 infoEmpty: 'Tidak ada data',
                 infoFiltered: '(disaring dari _MAX_ total data)',
                 zeroRecords: 'Tidak ada data yang cocok',
@@ -57,8 +56,8 @@ $(document).ready(function () {
                 paginate: {
                     first: 'Pertama',
                     last: 'Terakhir',
-                    next: 'Selanjutnya',
-                    previous: 'Sebelumnya',
+                    next: '>',
+                    previous: '<',
                 },
             },
         });
@@ -68,6 +67,10 @@ $(document).ready(function () {
     let incomeTable = initDataTable('incomeTable', 'income', 'success');
     let expenseTable = null;
 
+    // Set default date to today
+    let today = new Date().toISOString().split('T')[0];
+    $('#transaction_date').val(today);
+
     // Lazy-load expense table on tab click
     $('button[data-bs-target="#expense"]').on('shown.bs.tab', function () {
         if (!expenseTable) {
@@ -75,6 +78,27 @@ $(document).ready(function () {
         } else {
             expenseTable.ajax.reload();
         }
+    });
+
+    /**
+     * Open modal in "Add" mode.
+     */
+    $('#btnAddTransaction').on('click', function () {
+        // Reset form
+        $('#transactionForm')[0].reset();
+        $('.form-control, .form-select').removeClass('is-invalid');
+        $('.invalid-feedback').text('');
+        $('#transaction_id').val('');
+        $('#category_id').html('<option value="">-- Pilih Tipe Terlebih Dahulu --</option>');
+        $('#category_id').prop('disabled', true);
+        $('#transaction_date').val(today);
+
+        // Set modal title for Add
+        $('#modalIcon').attr('class', 'bi bi-plus-circle me-2');
+        $('#modalTitleText').text('Tambah Transaksi');
+        $('#btnSubmit').html('<i class="bi bi-save me-1"></i> Simpan');
+
+        $('#transactionModal').modal('show');
     });
 
     /**
@@ -118,15 +142,9 @@ $(document).ready(function () {
     });
 
     /**
-     * Set default date to today.
-     */
-    let today = new Date().toISOString().split('T')[0];
-    $('#transaction_date').val(today);
-
-    /**
      * Handle form submission - Store Transaction.
      */
-    $('#addTransactionForm').on('submit', function (e) {
+    $('#transactionForm').on('submit', function (e) {
         e.preventDefault();
 
         // Clear previous errors
@@ -151,7 +169,7 @@ $(document).ready(function () {
             data: formData,
             success: function (response) {
                 if (response.success) {
-                    $('#addTransactionModal').modal('hide');
+                    $('#transactionModal').modal('hide');
 
                     Swal.fire({
                         icon: 'success',
@@ -189,13 +207,8 @@ $(document).ready(function () {
 
     /**
      * Handle Delete Transaction.
-     *
-     * BUG: URL is missing the transaction ID concatenation.
-     * The request will be sent to '/transactions/' instead of '/transactions/{id}'
      */
     $(document).on('click', '.btn-delete', function () {
-        let id = $(this).data('id');
-
         Swal.fire({
             title: 'Apakah Anda yakin?',
             text: 'Data transaksi akan dihapus permanen!',
@@ -238,8 +251,8 @@ $(document).ready(function () {
     /**
      * Reset form when modal is closed.
      */
-    $('#addTransactionModal').on('hidden.bs.modal', function () {
-        $('#addTransactionForm')[0].reset();
+    $('#transactionModal').on('hidden.bs.modal', function () {
+        $('#transactionForm')[0].reset();
         $('.form-control, .form-select').removeClass('is-invalid');
         $('.invalid-feedback').text('');
         $('#category_id').html('<option value="">-- Pilih Tipe Terlebih Dahulu --</option>');

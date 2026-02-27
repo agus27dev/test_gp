@@ -23,7 +23,7 @@ class TransactionController extends Controller
     }
 
     /**
-     * Display listing of transactions.
+     * Fungsi menuju halaman utama
      *
      * @return View
      */
@@ -41,31 +41,29 @@ class TransactionController extends Controller
     }
 
     /**
-     * Get transactions data for DataTable.
+     * Fungsi datatable transaksi
      *
      * @param Request $request
      * @return JsonResponse
      */
     public function datatable(Request $request): JsonResponse
     {
-        $type = $request->get('type', 'income');
-
-        return $this->transactionService->handleGetTransactionDatatable($type)->getResult()->make(true);
+        return $this->transactionService->handleGetTransactionDatatable($request)->getResult()->make(true);
     }
 
     /**
-     * Store a newly created transaction.
+     * Fungsi store transaksi baru
      *
      * @param StoreTransactionRequest $request
      * @return JsonResponse
      */
     public function store(StoreTransactionRequest $request): JsonResponse
     {
-        return $this->transactionService->handleStoreTransaction($request->validated())->json();
+        return $this->transactionService->handleStoreTransaction($request)->json();
     }
 
     /**
-     * Remove the specified transaction.
+     * Fungsi delete transaksi
      *
      * @param int $id
      * @return JsonResponse

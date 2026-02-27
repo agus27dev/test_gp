@@ -4,32 +4,21 @@ namespace App\Repositories;
 
 use App\Models\Transaction;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 
 class TransactionRepository
 {
     /**
-     * Get base query for transactions with category relation.
+     * Get transactions for datatable with optional type filter.
      *
-     * @param string|null $type
+     * @param array $filter
      * @return Builder
      */
-    public function getTransactionQuery(?string $type = null): Builder
+    public function builderTransactionForDatatable(array $filter): Builder
     {
         return Transaction::with('category')
-            ->when($type, fn (Builder $query, string $type) => $query->where('type', $type))
+            ->when($filter['type'], fn (Builder $query, string $type) => 
+                $query->where('type', $type))
             ->orderBy('transaction_date', 'desc');
-    }
-
-    /**
-     * Get all transactions, optionally filtered by type.
-     *
-     * @param string|null $type
-     * @return Collection
-     */
-    public function getAllTransactions(?string $type = null): Collection
-    {
-        return $this->getTransactionQuery($type)->get();
     }
 
     /**
@@ -44,30 +33,25 @@ class TransactionRepository
     }
 
     /**
-     * Get a transaction by ID.
+     * Get transaction by ID.
      *
      * @param int $id
      * @return Transaction|null
      */
     public function getTransactionById(int $id): ?Transaction
     {
-        return Transaction::with('category')->find($id);
+        return Transaction::with('category')
+            ->findOrFail($id);
     }
 
     /**
-     * Delete a transaction by ID.
+     * Delete transaction.
      *
-     * @param int $id
-     * @return bool
+     * @param Transaction $transaction
+     * @return bool|null
      */
-    public function deleteTransaction(int $id): bool
+    public function deleteTransaction(Transaction $transaction)
     {
-        $transaction = Transaction::find($id);
-
-        if (!$transaction) {
-            return false;
-        }
-
         return $transaction->delete();
     }
 }

@@ -40,9 +40,33 @@
     <!-- Action Button -->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h4 class="mb-0">Daftar Transaksi</h4>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTransactionModal">
+        <button class="btn btn-primary" id="btnAddTransaction">
             <i class="bi bi-plus-circle me-1"></i> Tambah Transaksi
         </button>
+    </div>
+
+    <!-- Date Range Filter -->
+    <div class="card mb-3">
+        <div class="card-body py-2">
+            <div class="row align-items-end">
+                <div class="col-md-4">
+                    <label for="filter_start_date" class="form-label mb-1 small text-muted">Dari Tanggal</label>
+                    <input type="date" class="form-control form-control-sm" id="filter_start_date">
+                </div>
+                <div class="col-md-4">
+                    <label for="filter_end_date" class="form-label mb-1 small text-muted">Sampai Tanggal</label>
+                    <input type="date" class="form-control form-control-sm" id="filter_end_date">
+                </div>
+                <div class="col-md-4 d-flex gap-2">
+                    <button class="btn btn-sm btn-primary" id="btnApplyFilter">
+                        <i class="bi bi-funnel me-1"></i> Filter
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary" id="btnResetFilter">
+                        <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Tabs -->
@@ -100,74 +124,8 @@
         </div>
     </div>
 
-    <!-- Add Transaction Modal -->
-    <div class="modal fade" id="addTransactionModal" tabindex="-1" aria-labelledby="addTransactionModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addTransactionModalLabel">
-                        <i class="bi bi-plus-circle me-2"></i>Tambah Transaksi
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form id="addTransactionForm">
-                    <div class="modal-body">
-                        <!-- Type -->
-                        <div class="mb-3">
-                            <label for="type" class="form-label">Tipe Transaksi <span class="text-danger">*</span></label>
-                            <select class="form-select" id="type" name="type" required>
-                                <option value="">-- Pilih Tipe --</option>
-                                <option value="income">Pemasukan</option>
-                                <option value="expense">Pengeluaran</option>
-                            </select>
-                            <div class="invalid-feedback" id="error-type"></div>
-                        </div>
-
-                        <!-- Category -->
-                        <div class="mb-3">
-                            <label for="category_id" class="form-label">Kategori <span class="text-danger">*</span></label>
-                            <select class="form-select" id="category_id" name="category_id" required disabled>
-                                <option value="">-- Pilih Tipe Terlebih Dahulu --</option>
-                            </select>
-                            <div class="invalid-feedback" id="error-category_id"></div>
-                        </div>
-
-                        <!-- Amount -->
-                        <div class="mb-3">
-                            <label for="amount" class="form-label">Jumlah (Rp) <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <span class="input-group-text">Rp</span>
-                                <input type="text" class="form-control" id="amount" name="amount"
-                                    placeholder="Contoh: 1.000.000" required>
-                            </div>
-                            <div class="invalid-feedback" id="error-amount"></div>
-                        </div>
-
-                        <!-- Description -->
-                        <div class="mb-3">
-                            <label for="description" class="form-label">Deskripsi</label>
-                            <textarea class="form-control" id="description" name="description" rows="2"
-                                placeholder="Opsional - Keterangan transaksi"></textarea>
-                            <div class="invalid-feedback" id="error-description"></div>
-                        </div>
-
-                        <!-- Transaction Date -->
-                        <div class="mb-3">
-                            <label for="transaction_date" class="form-label">Tanggal <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control" id="transaction_date" name="transaction_date" required>
-                            <div class="invalid-feedback" id="error-transaction_date"></div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-primary" id="btnSubmit">
-                            <i class="bi bi-save me-1"></i> Simpan
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    <!-- Transaction Modal (Reusable Partial) -->
+    @include('transactions._modal')
 @endsection
 
 @push('scripts')
